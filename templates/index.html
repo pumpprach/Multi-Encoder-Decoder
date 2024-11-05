@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Encoder/Decoder</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            resize: vertical;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"], select {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            textarea {
+                height: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            textarea {
+                height: 60px;
+            }
+
+            input[type="submit"], select {
+                padding: 8px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Multi-Encoder/Decoder</h1>
+
+        <form method="POST">
+            <label for="text">Enter Text to Encode/Decode:</label><br>
+            <textarea name="text" required>{{ request.form.text if request.form.text else '' }}</textarea><br><br>
+
+            <label for="method">Choose a method:</label><br>
+            <select name="method" required id="method-select">
+                <option value="to_base64" {% if request.form.method == 'to_base64' %}selected{% endif %}>To Base64</option>
+                <option value="from_base64" {% if request.form.method == 'from_base64' %}selected{% endif %}>From Base64</option>
+                <option value="to_base32" {% if request.form.method == 'to_base32' %}selected{% endif %}>To Base32</option>
+                <option value="from_base32" {% if request.form.method == 'from_base32' %}selected{% endif %}>From Base32</option>
+                <option value="to_hex" {% if request.form.method == 'to_hex' %}selected{% endif %}>To Hex</option>
+                <option value="from_hex" {% if request.form.method == 'from_hex' %}selected{% endif %}>From Hex</option>
+                <option value="to_binary" {% if request.form.method == 'to_binary' %}selected{% endif %}>To Binary</option>
+                <option value="from_binary" {% if request.form.method == 'from_binary' %}selected{% endif %}>From Binary</option>
+                <option value="to_md5" {% if request.form.method == 'to_md5' %}selected{% endif %}>To MD5 (Hash)</option>
+            </select><br><br>
+
+            <input type="submit" value="Submit">
+        </form>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if result is not none and result != '' %}
+            <h3>Result:</h3>
+            <p>{{ result }}</p>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#method-select').select2({
+                placeholder: "Select a method",
+                allowClear: true
+            });
+        });
+    </script>
+</body>
+</html>
